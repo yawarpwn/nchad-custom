@@ -1,9 +1,32 @@
-local overrides = require("custom.configs.overrides")
+local overrides = require "custom.configs.overrides"
 
 ---@type NvPluginSpec[]
 local plugins = {
 
   -- Override plugin definition options
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
+    opts = function()
+      local cmp = require "cmp"
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = "cmdline" },
+        },
+      })
+    end,
+    dependencies = {
+      "hrsh7th/cmp-cmdline",
+    },
+  },
+    -- Search motions
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = overrides.flash,
+  },
 
   {
     "neovim/nvim-lspconfig",
@@ -24,20 +47,20 @@ local plugins = {
 
   -- override plugin configs
   {
-   "nvim-tree/nvim-web-devicons",
+    "nvim-tree/nvim-web-devicons",
     opts = {
- override_by_extension = {
-  ["astro"] = {
-    icon = "󱓞",
-    color = "#FF7E33",
-    name = "astro",
-  }
- };
-    }
+      override_by_extension = {
+        ["astro"] = {
+          icon = "󱓞",
+          color = "#FF7E33",
+          name = "astro",
+        },
+      },
+    },
   },
   {
     "williamboman/mason.nvim",
-    opts = overrides.mason
+    opts = overrides.mason,
   },
 
   {
