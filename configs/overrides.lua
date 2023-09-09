@@ -10,6 +10,7 @@ M.treesitter = {
     "typescript",
     "tsx",
     "json",
+    "astro",
     -- "c",
     "markdown",
     "markdown_inline",
@@ -36,8 +37,8 @@ M.mason = {
     "prettier",
     "eslint_d",
     -- "eslint",
-    "tailwindcss-language-server"
-
+    "tailwindcss-language-server",
+    "astro-language-server",
     -- c/cpp stuff
     -- "clangd",
     -- "clang-format",
@@ -135,6 +136,47 @@ M.flash = {
     },
     -- options used for remote flash
     remote = {},
+  },
+}
+
+M.dressing = {
+  input = {
+    enabled = true,
+    default_prompt = "➤ ",
+    win_options = {
+      winblend = 0,
+    },
+  },
+  select = {
+    enabled = true,
+    backend = { "telescope", "builtin" },
+    builtin = {
+      win_options = {
+        winblend = 0,
+      },
+    },
+  },
+}
+
+M.colorizer = {
+  user_default_options = {
+    tailwind = true,
+  },
+  filetypes = {
+    css = {
+      RGB = true, -- #RGB hex codes
+      RRGGBB = true, -- #RRGGBB hex codes
+      names = true, -- "Name" codes like Blue
+      RRGGBBAA = true, -- #RRGGBBAA hex codes
+      rgb_fn = true, -- CSS rgb() and rgba() functions
+      hsl_fn = true, -- CSS hsl() and hsla() functions
+      css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+      css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+    },
+    html = { mode = "background" },
+    markdown = { names = false },
+    lua = { names = false },
+    "*",
   },
 }
 

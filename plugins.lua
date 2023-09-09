@@ -21,7 +21,7 @@ local plugins = {
       "hrsh7th/cmp-cmdline",
     },
   },
-    -- Search motions
+  -- Search motions
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -45,7 +45,16 @@ local plugins = {
     end, -- Override to setup mason-lspconfig
   },
 
-  -- override plugin configs
+  -- Schemas
+  -- { "b0o/schemastore.nvim" },
+
+  -- Improve UI
+  {
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    opts = overrides.dressing,
+  },
+
   {
     "nvim-tree/nvim-web-devicons",
     opts = {
@@ -72,6 +81,10 @@ local plugins = {
     "nvim-tree/nvim-tree.lua",
     opts = overrides.nvimtree,
   },
+  {
+    "NvChad/nvim-colorizer.lua",
+    opts = overrides.colorizer,
+  },
 
   -- Install a plugin
   {
@@ -81,6 +94,11 @@ local plugins = {
       require("better_escape").setup()
     end,
   },
+  -- Buffer Delete
+  {
+    "moll/vim-bbye",
+    cmd = { "Bdelete", "Bwipeout" },
+  },
 
   -- To make a plugin not be loaded
   -- {
@@ -88,7 +106,7 @@ local plugins = {
   --   enabled = false
   -- },
 
-  -- All NvChad plugins are lazy-loaded by default
+  -- All NvChad plugins are lazy-loade by default
   -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
   -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
   -- {
