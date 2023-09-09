@@ -19,7 +19,6 @@ M.general = {
   },
   n = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
-    ["e"] = { "<cmd>:NvimTreeToggle<CR>", "Explorer NvimTree" },
     [">"] = {
       ">>",
       "Indent forward",
