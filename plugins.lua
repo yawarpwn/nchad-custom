@@ -75,6 +75,14 @@ local plugins = {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = overrides.treesitter,
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+      },
+      {
+        "windwp/nvim-ts-autotag",
+      },
+    },
   },
 
   {
@@ -89,7 +97,7 @@ local plugins = {
   -- Install a plugin
   {
     "max397574/better-escape.nvim",
-    event = "InsertEnter",
+    event = "insertenter",
     config = function()
       require("better_escape").setup()
     end,
@@ -98,6 +106,25 @@ local plugins = {
   {
     "moll/vim-bbye",
     cmd = { "Bdelete", "Bwipeout" },
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup {}
+    end,
+  },
+  {
+    "Pocco81/TrueZen.nvim",
+    cmd = {
+      "TZAtaraxis",
+      "TZMinimalist",
+      "TZFocus",
+    },
+    config = function()
+      require("true-zen").setup()
+    end,
   },
 
   -- To make a plugin not be loaded

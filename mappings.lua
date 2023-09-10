@@ -209,7 +209,7 @@ M.tabufline = {
     },
 
     -- close buffer + hide terminal buffer
-    ["<leader>lc"] = {
+    ["<leader>c"] = {
       function()
         require("nvchad.tabufline").close_buffer()
       end,
