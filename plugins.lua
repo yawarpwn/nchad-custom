@@ -46,7 +46,7 @@ local plugins = {
   },
 
   -- Schemas
-  -- { "b0o/schemastore.nvim" },
+  { "b0o/schemastore.nvim" },
 
   -- Improve UI
   {
@@ -113,17 +113,6 @@ local plugins = {
     event = "VeryLazy",
     config = function()
       require("nvim-surround").setup {}
-    end,
-  },
-  {
-    "Pocco81/TrueZen.nvim",
-    cmd = {
-      "TZAtaraxis",
-      "TZMinimalist",
-      "TZFocus",
-    },
-    config = function()
-      require("true-zen").setup()
     end,
   },
 

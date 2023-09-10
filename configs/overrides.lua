@@ -71,6 +71,7 @@ M.mason = {
     "deno",
     "prettier",
     "eslint_d",
+    'json-lsp',
     -- "eslint",
     "tailwindcss-language-server",
     "astro-language-server",
