@@ -18,7 +18,23 @@ M.general = {
     },
   },
   n = {
-    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+
+    -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
+    [";"] = {
+      function()
+        if vim.bo.buftype == "terminal" then
+          vim.cmd "Bdelete!"
+          vim.cmd "silent! close"
+        elseif #vim.api.nvim_list_wins() > 1 then
+          vim.cmd "silent! close"
+        else
+          vim.notify("Can't Close Window", vim.log.levels.WARN, { title = "Close Window" })
+        end
+      end,
+      "Close window",
+      opts = { silent = true },
+    },
+
     [">"] = {
       ">>",
       "Indent forward",
@@ -34,6 +50,25 @@ M.general = {
     ["<A-k>"] = {
       ":m .-2<CR>==",
       "Move the line down",
+      opts = { silent = true },
+    },
+    ["<leader>ol"] = { ":set nu!<cr>", "Toggle line number", opts = { silent = true } },
+    ["<leader>or"] = { ":set rnu!<cr>", "Toggle relative number", opts = { silent = true } },
+    ["<leader>ot"] = {
+      function()
+        require("base46").toggle_transparency()
+      end,
+      "Toggle Transparency",
+    },
+    ["<leader>m"] = {
+      function()
+        if vim.bo.filetype == "markdown" then
+          vim.cmd "MarkdownPreviewToggle"
+        else
+          vim.notify("Only available in markdown", vim.log.levels.WARN, { title = "Markdown-Preview" })
+        end
+      end,
+      "Markdown Preview",
       opts = { silent = true },
     },
   },
@@ -96,6 +131,33 @@ M.general = {
       end,
       "Word Search Decrement",
       opts = { expr = true },
+    },
+  },
+  t = {
+    ["<Esc>"] = {
+      "<C-\\><C-n>",
+      "Enter insert mode",
+      opts = { silent = true, noremap = true },
+    },
+    ["<C-h>"] = {
+      "<C-\\><C-n><C-W>h",
+      "Leave terminal",
+      opts = { silent = true, noremap = true },
+    },
+    ["<C-j>"] = {
+      "<C-\\><C-n><C-W>j",
+      "Leave terminal",
+      opts = { silent = true, noremap = true },
+    },
+    ["<C-k>"] = {
+      "<C-\\><C-n><C-W>k",
+      "Leave terminal",
+      opts = { silent = true, noremap = true },
+    },
+    ["<C-l>"] = {
+      "<C-\\><C-n><C-W>l",
+      "Leave terminal",
+      opts = { silent = true, noremap = true },
     },
   },
 }
@@ -218,6 +280,13 @@ M.tabufline = {
   },
 }
 
+M.disabled = {
+  n = {
+    ["<A-i>"] = "",
+    ["<A-h>"] = "",
+    ["<A-v>"] = "",
+  },
+}
 
 M.nvimtree = {
   plugin = true,
