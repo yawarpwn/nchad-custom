@@ -1,5 +1,4 @@
 local overrides = require "custom.configs.overrides"
-
 ---@type NvPluginSpec[]
 local plugins = {
 
@@ -16,11 +15,20 @@ local plugins = {
           { name = "cmdline" },
         },
       })
+
+      require("luasnip.loaders.from_vscode").lazy_load()
     end,
     dependencies = {
-      "hrsh7th/cmp-cmdline",
+      {
+        "hrsh7th/cmp-cmdline",
+      },
+      {
+        "L3MON4D3/LuaSnip",
+        dependencies = "rafamadriz/friendly-snippets",
+      },
     },
   },
+
   -- Search motions
   {
     "folke/flash.nvim",
@@ -115,6 +123,19 @@ local plugins = {
       require("nvim-surround").setup {}
     end,
   },
+  -- Preview Markdown
+  {
+    "iamcco/markdown-preview.nvim",
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    ft = "markdown",
+  },
+  -- {
+  --   'kkharji/sqlite.lua',
+  --   config= function()
+  --     end
+  -- }
 
   -- To make a plugin not be loaded
   -- {

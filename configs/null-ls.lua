@@ -13,13 +13,15 @@ local sources = {
   --   extra_filetypes = { "astro"}
   -- }), -- so prettier works only on these filetypes
   -- Lua
+  b.formatting.sql_formatter,
   b.formatting.stylua,
 
   -- cpp
   b.formatting.clang_format,
-  b.diagnostics.eslint.with {
-    command = "eslint_d",
-  },
+  -- b.diagnostics.eslint_d,
+  -- b.diagnostics.eslint.with {
+  --   command = "eslint_d",
+  -- },
 }
 
 null_ls.setup {
