@@ -1,0 +1,30 @@
+ys (you surround add)
+cs (change surrounding )
+ds (delete surrounding)
+
+ys<motion><delimeter>
+
+ysw"
+*rueba --> "prueba"
+
+ysa"(
+"pr*eba" --> ( "prueba" )
+
+ds<delimeter>
+ds"
+"prueba" --> prueba
+
+ds(
+("prueba")
+
+// Function
+
+yswf
+arg ---> fn(arg)
+
+csf
+get(arg) --> set(arg)
+
+dsf
+get(arg) --> arg
+

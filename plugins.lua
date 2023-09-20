@@ -131,6 +131,29 @@ local plugins = {
     end,
     ft = "markdown",
   },
+  {
+    "folke/trouble.nvim",
+    cmd = { "TroubleToggle", "Trouble" },
+    keys = {
+      { "<leader>x", desc = "Trouble" },
+      { "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<CR>", desc = "Workspace Diagnostics" },
+      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<CR>", desc = "Document Diagnostics" },
+      { "<leader>xq", "<cmd>TroubleToggle quickfix<CR>", desc = "Quickfix List Trouble" },
+    },
+    opts = {
+      use_diagnostic_signs = true,
+      action_keys = {
+        close = { "q", "<esc>" },
+        cancel = "<C-e>",
+      },
+    },
+  },
+  {
+    "folke/todo-comments.nvim",
+    config = function()
+      require("todo-comments").config()
+    end,
+  },
   -- {
   --   'kkharji/sqlite.lua',
   --   config= function()

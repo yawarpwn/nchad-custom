@@ -34,6 +34,11 @@ M.general = {
       "Close window",
       opts = { silent = true },
     },
+    ["<S-Tab>"] = {
+      ":<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>",
+      "Buffers",
+      opts = { silent = true },
+    },
 
     [">"] = {
       ">>",
@@ -280,18 +285,33 @@ M.tabufline = {
   },
 }
 
+M.nvimtree = {
+  plugin = true,
+  n = {
+    ["<leader>e"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
+    ["<C-n>"] = {
+      function ()
+          -- vim.keymap.set('n', '<C-v>', api.node.open.vertical,                opts('Open: Vertical Split'))
+        local api = require("nvim-tree.api")
+        api.node.open.vertical()
+      end,
+      "Open: Vertical Split "
+    }
+  },
+}
+
 M.disabled = {
   n = {
     ["<A-i>"] = "",
     ["<A-h>"] = "",
     ["<A-v>"] = "",
-  },
-}
-
-M.nvimtree = {
-  plugin = true,
-  n = {
-    ["<leader>e"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
+    ["<tab>"] = "",
+    ["<S-tab>"] = "",
+    ["<leader>x"] = "",
+    ["<leader>v"] = "",
+    ["<C-v>"] = "",
+    ["<C-s>"] = "",
+    ["<C-n>"] = "",
   },
 }
 
