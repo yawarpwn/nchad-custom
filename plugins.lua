@@ -54,7 +54,7 @@ local plugins = {
   },
   {
     "Exafunction/codeium.vim",
-    enabled =  true,
+    enabled = true,
     event = "VeryLazy",
     config = function()
       -- Change '<C-g>' here to any keycode you like.
@@ -113,6 +113,18 @@ local plugins = {
       "windwp/nvim-ts-autotag",
     },
   },
+    -- Commenter
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup {
+        -- ignores empty lines
+        ignore = "^$",
+        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+      }
+    end,
+    dependencies = "JoosepAlviste/nvim-ts-context-commentstring",
+  },
 
   {
     "nvim-tree/nvim-tree.lua",
@@ -169,11 +181,16 @@ local plugins = {
       },
     },
   },
+  -- Highlight, list and search todo comments in your projects
   {
     "folke/todo-comments.nvim",
-    config = function()
-      require("todo-comments").config()
-    end,
+    event ='VeryLazy',
+    opts = overrides.todo_comments
+  },
+    -- Show diffs
+  {
+    "sindrets/diffview.nvim",
+    event = "VeryLazy",
   },
   -- {
   --   'kkharji/sqlite.lua',
