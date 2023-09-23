@@ -52,6 +52,30 @@ local plugins = {
       require "custom.configs.lspconfig"
     end, -- Override to setup mason-lspconfig
   },
+  {
+    "Exafunction/codeium.vim",
+    enabled =  true,
+    event = "VeryLazy",
+    config = function()
+      -- Change '<C-g>' here to any keycode you like.
+      vim.keymap.set("i", "<C-g>", function()
+        return vim.fn["codeium#Accept"]()
+      end, { expr = true })
+      vim.keymap.set("i", "<c-;>", function()
+        return vim.fn["codeium#CycleCompletions"](1)
+      end, { expr = true })
+      vim.keymap.set("i", "<c-,>", function()
+        return vim.fn["codeium#CycleCompletions"](-1)
+      end, { expr = true })
+      vim.keymap.set("i", "<c-x>", function()
+        return vim.fn["codeium#Clear"]()
+      end, { expr = true })
+
+      vim.g.codeium_filetypes = {
+        ["TelescopePrompt"] = false,
+      }
+    end,
+  },
 
   -- Schemas
   { "b0o/schemastore.nvim" },
@@ -84,12 +108,9 @@ local plugins = {
     "nvim-treesitter/nvim-treesitter",
     opts = overrides.treesitter,
     dependencies = {
-      {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-      },
-      {
-        "windwp/nvim-ts-autotag",
-      },
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      "windwp/nvim-ts-autotag",
     },
   },
 
