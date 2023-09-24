@@ -9,6 +9,12 @@ M.override = {
   Comment = {
     italic = true,
   },
+  Search = { fg = "black", bg = "blue" },
+  IncSearch = { fg = "black", bg = "red" },
+  CurSearch = { fg = "black", bg = "blue" },
+  Substitute = { fg = "black", bg = "green" },
+  -- NvDashAscii = { bg = "NONE", fg = "blue" },
+  -- NvDashButtons = { bg = "NONE" },
 }
 
 ---@type HLTable

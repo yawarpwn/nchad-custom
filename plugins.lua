@@ -60,7 +60,10 @@ local plugins = {
       -- formatting
       {
         "stevearc/conform.nvim",
-        opts = overrides.conform,
+        -- opts=overrides.conform
+        opts = function ()
+          require("custom.configs.conform")
+        end,
       },
       {
         "williamboman/mason.nvim",

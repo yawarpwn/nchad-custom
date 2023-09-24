@@ -12,6 +12,7 @@ local function on_attach(bufnr)
   vim.keymap.set("n", "u", api.tree.change_root_to_parent, opts "Up")
 end
 
+
 M.conform = {
   formatters_by_ft = {
     lua = { "stylua" },
@@ -30,7 +31,8 @@ local prettier_ft = {
   "html",
   "json",
   "jsx",
-  "javaScript",
+  "javascript",
+  "javascriptreact",
   -- "less",
   "markdown",
   -- "scss",
@@ -39,10 +41,10 @@ local prettier_ft = {
   "yaml",
 }
 
-for _, filetype in pairs(prettier_ft) do
-  M.conform.formatters_by_ft[filetype] = { "prettier" }
-end
 
+for _, filetype in pairs(prettier_ft) do
+  M.conform.formatters_by_ft[filetype] = { { "prettierd", "prettier" } }
+end
 
 M.treesitter = {
   ensure_installed = {
@@ -65,7 +67,7 @@ M.treesitter = {
     --   "python"
     -- },
   },
-    context_commentstring = {
+  context_commentstring = {
     enable = true,
     enable_autocmd = false,
   },
@@ -106,7 +108,6 @@ M.treesitter = {
   },
 }
 
-
 M.mason = {
   ensure_installed = {
     -- lua stuff
@@ -120,7 +121,7 @@ M.mason = {
     "deno",
     "prettier",
     "eslint_d",
-    'json-lsp',
+    "json-lsp",
     -- "eslint",
     "tailwindcss-language-server",
     "astro-language-server",
@@ -249,7 +250,6 @@ M.lspsaga = {
   },
 }
 
-
 M.neodev = {
   library = {
     enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
@@ -269,13 +269,6 @@ M.neodev = {
   -- needs lua-language-server >= 3.6.0
   pathStrict = true,
 }
-
-
-
-
-
-
-
 
 -- git support in nvimtree
 -- M.nvimtree = {
