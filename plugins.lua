@@ -36,22 +36,64 @@ local plugins = {
     opts = overrides.flash,
   },
 
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   dependencies = {
+  --     -- format & linting
+  --     {
+  --       "jose-elias-alvarez/null-ls.nvim",
+  --       config = function()
+  --         require "custom.configs.null-ls"
+  --       end,
+  --     },
+  --   },
+  --   config = function()
+  --     require "plugins.configs.lspconfig"
+  --     require "custom.configs.lspconfig"
+  --   end, -- Override to setup mason-lspconfig
+  -- },
+  -- Native LSP
   {
     "neovim/nvim-lspconfig",
+    event = "VeryLazy",
     dependencies = {
-      -- format & linting
+      -- formatting
       {
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-          require "custom.configs.null-ls"
-        end,
+        "stevearc/conform.nvim",
+        opts = overrides.conform,
+      },
+      {
+        "williamboman/mason.nvim",
+        cmd = {
+          "Mason",
+          "MasonInstall",
+          "MasonUpdate",
+          "MasonUninstall",
+          "MasonUninstallAll",
+          "MasonLog",
+        },
+        opts = overrides.mason,
+      },
+      {
+        "williamboman/mason-lspconfig.nvim",
+      },
+      {
+        "nvimdev/lspsaga.nvim",
+        opts = overrides.lspsaga,
+      },
+      {
+        "folke/neodev.nvim",
+        opts = overrides.neodev,
       },
     },
     config = function()
-      require "plugins.configs.lspconfig"
+      dofile(vim.g.base46_cache .. "lsp")
+      require "nvchad.lsp"
       require "custom.configs.lspconfig"
-    end, -- Override to setup mason-lspconfig
+    end,
   },
+
+  --Alternativeto Copilot 
   {
     "Exafunction/codeium.vim",
     enabled = true,

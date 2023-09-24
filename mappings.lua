@@ -34,6 +34,29 @@ M.general = {
       "Close window",
       opts = { silent = true },
     },
+    ["<C-Up>"] = {
+      ":resize +2<CR>",
+      "Add size at the top",
+      opts = { silent = true },
+    },
+
+    ["<C-Down>"] = {
+      ":resize -2<CR>",
+      "Add size at the bottom",
+      opts = { silent = true },
+    },
+
+    ["<C-Left>"] = {
+      ":vertical resize +2<CR>",
+      "Add size at the left",
+      opts = { silent = true },
+    },
+
+    ["<C-Right>"] = {
+      ":vertical resize -2<CR>",
+      "Add size at the right",
+      opts = { silent = true },
+    },
     ["<S-Tab>"] = {
       ":<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false, initial_mode='normal'})<cr>",
       "Buffers",
@@ -217,45 +240,98 @@ M.nvterm = {
     },
   },
 }
+-- M.LSP = {
+-- n = {
+--   ["<leader>lf"] = {
+--     function()
+--       vim.lsp.buf.format { async = true }
+--     end,
+--     "LSP formatting",
+--   },
+
+--   ["<leader>lr"] = {
+--     function()
+--       require("nvchad.renamer").open()
+--     end,
+--     "LSP rename",
+--   },
+-- },
+-- }
 M.LSP = {
   n = {
-    ["<leader>lf"] = {
-      function()
-        vim.lsp.buf.format { async = true }
-      end,
-      "LSP formatting",
+    ["<leader>lf"] = { ":Format<cr>", "Format", opts = { silent = true } },
+    ["<leader>la"] = { ":Lspsaga code_action<cr>", "Code Action", opts = { silent = true } },
+    ["<leader>li"] = { ":LspInfo<cr>", "Info", opts = { silent = true } },
+    ["<leader>lo"] = { ":Lspsaga outline<cr>", "Code Outline", opts = { silent = true } },
+    ["<leader>lI"] = { ":Lspsaga incoming_calls<cr>", "Incoming Calls", opts = { silent = true } },
+    ["<leader>lO"] = { ":Lspsaga outgoing_calls<cr>", "Outgoing Calls", opts = { silent = true } },
+    ["<leader>lm"] = { ":Mason<cr>", "Mason Installer", opts = { silent = true } },
+    ["<leader>lj"] = {
+      ":Lspsaga diagnostic_jump_next<cr>",
+      "Next Diagnostic",
+      opts = { silent = true },
     },
-
-    ["<leader>lr"] = {
-      function()
-        require("nvchad.renamer").open()
-      end,
-      "LSP rename",
+    ["<leader>lk"] = {
+      ":Lspsaga diagnostic_jump_prev<cr>",
+      "Prev Diagnostic",
+      opts = { silent = true },
     },
-
-    -- ["<leader>la"] = { ":Lspsaga code_action<cr>", "Code Action", opts = { silent = true } },
-    -- ["<leader>li"] = { ":LspInfo<cr>", "Info", opts = { silent = true } },
-    -- ["<leader>lo"] = { ":Lspsaga outline<cr>", "Code Outline", opts = { silent = true } },
-    -- ["<leader>lI"] = { ":Lspsaga incoming_calls<cr>", "Incoming Calls", opts = { silent = true } },
-    -- ["<leader>lO"] = { ":Lspsaga outgoing_calls<cr>", "Outgoing Calls", opts = { silent = true } },
-    -- ["<leader>lm"] = { ":Mason<cr>", "Mason Installer", opts = { silent = true } },
-    -- ["<leader>lj"] = {
-    --   ":Lspsaga diagnostic_jump_next<cr>",
-    --   "Next Diagnostic",
-    --   opts = { silent = true },
-    -- },
-    -- ["<leader>lk"] = {
-    --   ":Lspsaga diagnostic_jump_prev<cr>",
-    --   "Prev Diagnostic",
-    --   opts = { silent = true },
-    -- },
-
-    -- ["<leader>ld"] = { ":Telescope diagnostics bufnr=0<cr>", "Document Diagnostics", opts = { silent = true } },
-    -- ["<leader>lw"] = { ":Telescope diagnostics<cr>", "Workspace Diagnostics", opts = { silent = true } },
-    -- ["<leader>ls"] = { ":Telescope lsp_document_symbols<cr>", "Document Symbols", opts = { silent = true } },
-    -- ["<leader>lS"] = { ":Telescope lsp_workspace_symbols<cr>", "Workspace Symbols", opts = { silent = true } },
+    ["<leader>lR"] = { ":LspRestart<cr>", "Restart", opts = { silent = true } },
+    ["<leader>lr"] = { ":Lspsaga rename<cr>", "Rename", opts = { silent = true } },
+    ["<leader>ld"] = { ":Telescope diagnostics bufnr=0<cr>", "Buffer Diagnostics", opts = { silent = true } },
+    ["<leader>lw"] = { ":Telescope diagnostics<cr>", "Workspace Diagnostics", opts = { silent = true } },
+    ["<leader>ls"] = { ":Telescope lsp_document_symbols<cr>", "Buffer Symbols", opts = { silent = true } },
+    ["<leader>lS"] = { ":Telescope lsp_workspace_symbols<cr>", "Workspace Symbols", opts = { silent = true } },
+  },
+  v = {
+    ["<leader>la"] = {
+      function()
+        vim.lsp.buf.code_action()
+      end,
+      "Code Action",
+    },
   },
 }
+M.Git = {
+  n = {
+    ["<leader>gg"] = {
+      function()
+        local Terminal = require("toggleterm.terminal").Terminal
+        local lazygit = Terminal:new { cmd = "lazygit", hidden = true }
+        lazygit:toggle()
+      end,
+      "Lazygit",
+      opts = { silent = true },
+    },
+    ["<leader>gj"] = { ":lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk", opts = { silent = true } },
+    ["<leader>gk"] = { ":lua require 'gitsigns'.prev_hunk()<cr>", "Prev Hunk", opts = { silent = true } },
+    ["<leader>gl"] = { ":lua require 'gitsigns'.blame_line()<cr>", "Blame", opts = { silent = true } },
+    ["<leader>gp"] = { ":lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk", opts = { silent = true } },
+    ["<leader>gr"] = { ":lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk", opts = { silent = true } },
+    ["<leader>gR"] = { ":lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer", opts = { silent = true } },
+    ["<leader>gs"] = { ":lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk", opts = { silent = true } },
+    ["<leader>gu"] = { ":lua reguire 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stgge Hunk", opts = { silent = true } },
+    ["<leader>go"] = { ":Telescope git_status<cr>", "Open changed file", opts = { silent = true } },
+    ["<leader>gb"] = { ":Telescope git_branches<cr>", "Checkout branch", opts = { silent = true } },
+    ["<leader>gc"] = { ":Telescope git_commits<cr>", "Checkout commit", opts = { silent = true } },
+    ["<leader>gd"] = {
+      function()
+        if next(require("diffview.lib").views) == nil then
+          vim.cmd "DiffviewOpen"
+        else
+          vim.cmd "DiffviewClose"
+        end
+      end,
+      "Toggle Diffview",
+      opts = { silent = true },
+    },
+  },
+}
+
+if vim.lsp.inlay_hint then
+  M.LSP.n["<leader>lh"] = { ":lua vim.lsp.inlay_hint(0, nil)<cr>", "Inlay Hint", opts = { silent = true } }
+end
+
 M.tabufline = {
   plugin = true,
 
@@ -290,28 +366,40 @@ M.nvimtree = {
   n = {
     ["<leader>e"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
     ["<C-n>"] = {
-      function ()
-          -- vim.keymap.set('n', '<C-v>', api.node.open.vertical,                opts('Open: Vertical Split'))
-        local api = require("nvim-tree.api")
+      function()
+        -- vim.keymap.set('n', '<C-v>', api.node.open.vertical,                opts('Open: Vertical Split'))
+        local api = require "nvim-tree.api"
         api.node.open.vertical()
       end,
-      "Open: Vertical Split "
-    }
+      "Open: Vertical Split ",
+    },
   },
 }
 
 M.disabled = {
   n = {
+    ["<Up>"] = "",
+    ["<Down>"] = "",
+    ["<tab>"] = "",
+    ["<S-tab>"] = "",
+
+    ["<Esc>"] = "",
+    ["<C-c>"] = "",
+    ["<C-s>"] = "",
+    ["<C-v>"] = "",
+    ["<C-n>"] = "",
+
     ["<A-i>"] = "",
     ["<A-h>"] = "",
     ["<A-v>"] = "",
-    ["<tab>"] = "",
-    ["<S-tab>"] = "",
+
     ["<leader>x"] = "",
     ["<leader>v"] = "",
-    ["<C-v>"] = "",
-    ["<C-s>"] = "",
-    ["<C-n>"] = "",
+
+    ["gD"] = "",
+    ["gd"] = "",
+    ["K"] = "",
+    ["gi"] = "",
   },
 }
 

@@ -1,4 +1,48 @@
 local M = {}
+local function on_attach(bufnr)
+  local api = require "nvim-tree.api"
+
+  local function opts(desc)
+    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+
+  api.config.mappings.default_on_attach(bufnr)
+
+  vim.keymap.set("n", "l", api.node.open.edit, opts "Open")
+  vim.keymap.set("n", "u", api.tree.change_root_to_parent, opts "Up")
+end
+
+M.conform = {
+  formatters_by_ft = {
+    lua = { "stylua" },
+    -- python = { "autopep8" },
+    -- cpp = { "clang_format" },
+    -- c = { "clang_format" },
+    -- go = { "gofumpt" },
+  },
+}
+
+local prettier_ft = {
+  -- "angular",
+  "css",
+  -- "flow",
+  -- "graphql",
+  "html",
+  "json",
+  "jsx",
+  "javaScript",
+  -- "less",
+  "markdown",
+  -- "scss",
+  "typescript",
+  -- "vue",
+  "yaml",
+}
+
+for _, filetype in pairs(prettier_ft) do
+  M.conform.formatters_by_ft[filetype] = { "prettier" }
+end
+
 
 M.treesitter = {
   ensure_installed = {
@@ -62,6 +106,7 @@ M.treesitter = {
   },
 }
 
+
 M.mason = {
   ensure_installed = {
     -- lua stuff
@@ -85,23 +130,248 @@ M.mason = {
   },
 }
 
+M.lspsaga = {
+  preview = {
+    lines_above = 0,
+    lines_below = 10,
+  },
+
+  code_action = {
+    num_shortcut = true,
+    keys = {
+      quit = ";",
+      exec = "<CR>",
+    },
+  },
+
+  scroll_preview = {
+    scroll_down = "<C-f>",
+    scroll_up = "<C-b>",
+  },
+  request_timeout = 2000,
+
+  lightbulb = {
+    enable = false,
+    enable_in_insert = true,
+    sign = true,
+    sign_priority = 40,
+    virtual_text = true,
+  },
+
+  rename = {
+    quit = ";",
+    exec = "<CR>",
+    in_select = false,
+  },
+
+  finder = {
+    edit = { "o", "<CR>" },
+    vsplit = "s",
+    split = "i",
+    tabe = "t",
+    quit = { ";", "<ESC>" },
+  },
+
+  diagnostic = {
+    insert_winblend = 0,
+    jump_num_shortcut = true,
+    on_insert = false,
+    on_insert_follow = false,
+    show_code_action = true,
+    show_source = true,
+    custom_fix = nil,
+    custom_msg = nil,
+    text_hl_follow = false,
+    border_follow = true,
+    keys = {
+      exec_action = "o",
+      quit = ";",
+    },
+  },
+
+  symbol_in_winbar = {
+    enable = false,
+    separator = "  ",
+    hide_keyword = true,
+    show_file = true,
+    folder_level = 2,
+  },
+
+  definition = {
+    edit = "<C-c>o",
+    vsplit = "<C-c>v",
+    split = "<C-c>i",
+    tabe = "<C-c>t",
+    quit = ";",
+    close = "<Esc>",
+  },
+
+  ui = {
+    theme = "round",
+    border = "rounded",
+    winblend = 0,
+    expand = "",
+    collaspe = "",
+    preview = " ",
+    code_action = "󱧣 ",
+    diagnostic = "🐞",
+    hover = " ",
+    kind = {},
+  },
+
+  outline = {
+    win_position = "right",
+    win_with = "",
+    win_width = 30,
+    show_detail = true,
+    auto_preview = true,
+    auto_refresh = true,
+    auto_close = true,
+    custom_sort = nil,
+    keys = {
+      jump = "o",
+      expand_collaspe = "u",
+      quit = ";",
+    },
+  },
+
+  callhierarchy = {
+    show_detail = false,
+    keys = {
+      edit = "e",
+      vsplit = "s",
+      split = "i",
+      tabe = "t",
+      jump = "o",
+      quit = ";",
+      expand_collaspe = "u",
+    },
+  },
+}
+
+
+M.neodev = {
+  library = {
+    enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
+    -- these settings will be used for your Neovim config directory
+    runtime = true, -- runtime path
+    types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
+    plugins = true, -- installed opt or start plugins in packpath
+    -- you can also specify the list of plugins to make available as a workspace library
+    -- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
+  },
+  setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
+  -- With lspconfig, Neodev will automatically setup your lua-language-server
+  -- If you disable this, then you have to set {before_init=require("neodev.lsp").before_init}
+  -- in your lsp start options
+  lspconfig = false,
+  -- much faster, but needs a recent built of lua-language-server
+  -- needs lua-language-server >= 3.6.0
+  pathStrict = true,
+}
+
+
+
+
+
+
 
 
 -- git support in nvimtree
+-- M.nvimtree = {
+--   git = {
+--     enable = true,
+--   },
+
+--   renderer = {
+--     highlight_git = true,
+--     icons = {
+--       show = {
+--         git = true,
+--       },
+--     },
+--   },
+-- }
 M.nvimtree = {
+  on_attach = on_attach,
+  diagnostics = {
+    enable = false,
+    icons = {
+      hint = "󰌵",
+      info = "",
+      warning = "",
+      error = "",
+    },
+  },
+  sync_root_with_cwd = true,
+  update_focused_file = {
+    enable = true,
+    update_cwd = true,
+    ignore_list = {},
+  },
   git = {
     enable = true,
+    ignore = true,
+    show_on_dirs = true,
+    show_on_open_dirs = true,
+    timeout = 5000,
+  },
+  view = {
+    cursorline = false,
+    float = {
+      enable = false,
+      quit_on_focus_loss = true,
+      open_win_config = {
+        relative = "editor",
+        border = "rounded",
+        width = 30,
+        height = 30,
+        row = 1,
+        col = 1,
+      },
+    },
   },
 
   renderer = {
-    highlight_git = true,
+    highlight_git = false,
+    -- root_folder_label = false,
+    root_folder_label = ":~:s?$?",
     icons = {
       show = {
+        file = true,
+        folder = true,
+        folder_arrow = true,
         git = true,
+      },
+
+      glyphs = {
+        default = "󰈚",
+        symlink = "",
+        folder = {
+          default = "",
+          empty = "",
+          empty_open = "",
+          open = "",
+          symlink = "",
+          symlink_open = "",
+          arrow_open = "",
+          arrow_closed = "",
+        },
+
+        git = {
+          unstaged = "",
+          staged = "✓",
+          unmerged = "",
+          renamed = "➜",
+          untracked = "U",
+          deleted = "",
+          ignored = "◌",
+        },
       },
     },
   },
 }
+
 M.flash = {
   labels = "asdfghjklqwertyuiopzxcvbnm",
   search = {
