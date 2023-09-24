@@ -33,7 +33,7 @@ local others  = {
   -- go = { "gofumpt" },
 }
 
-local formatters_by_ft = vim.tbl_deep_extend("force", formatters_by_ft, others)
+formatters_by_ft = vim.tbl_deep_extend("force", formatters_by_ft, others)
 
 
 conform.setup {

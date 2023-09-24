@@ -61,8 +61,8 @@ local plugins = {
       {
         "stevearc/conform.nvim",
         -- opts=overrides.conform
-        opts = function ()
-          require("custom.configs.conform")
+        opts = function()
+          require "custom.configs.conform"
         end,
       },
       {
@@ -96,7 +96,7 @@ local plugins = {
     end,
   },
 
-  --Alternativeto Copilot 
+  --Alternativeto Copilot
   {
     "Exafunction/codeium.vim",
     enabled = true,
@@ -158,7 +158,7 @@ local plugins = {
       "windwp/nvim-ts-autotag",
     },
   },
-    -- Commenter
+  -- Commenter
   {
     "numToStr/Comment.nvim",
     config = function()
@@ -226,17 +226,62 @@ local plugins = {
       },
     },
   },
+
   -- Highlight, list and search todo comments in your projects
   {
     "folke/todo-comments.nvim",
-    event ='VeryLazy',
-    opts = overrides.todo_comments
+    event = "VeryLazy",
+    opts = overrides.todo_comments,
   },
-    -- Show diffs
+
+  -- Show diffs
   {
     "sindrets/diffview.nvim",
     event = "VeryLazy",
   },
+
+  -- Debugging
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      {
+        "mfussenegger/nvim-dap",
+        config = function()
+          -- NOTE: Check out this for guide
+          -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
+          local dap = require "dap"
+          vim.fn.sign_define(
+            "DapBreakpoint",
+            { text = "🛑", texthl = "DiagnosticSignError", linehl = "", numhl = "" }
+          )
+
+          local dapui = require "dapui"
+          dap.listeners.after.event_initialized["dapui_config"] = function()
+            dapui.open()
+          end
+
+          -- dap.listeners.before.event_terminated["dapui_config"] = function()
+          --   dapui.close()
+          -- end
+
+          -- dap.listeners.before.event_exited["dapui_config"] = function()
+          --   dapui.close()
+          -- end
+
+          -- NOTE: Make sure to install the needed files/exectubles through mason
+
+          -- require "custom.configs.dap.cpptools"
+          -- require "custom.configs.dap.java-debug"
+          require "custom.configs.dap.node-debug2"
+          -- require "custom.configs.dap.debugpy"
+          -- require "custom.configs.dap.go-debug-adapter"
+          require "custom.configs.dap.js-debug"
+        end,
+      },
+    },
+    opts = overrides.dap_ui,
+  },
+
   -- {
   --   'kkharji/sqlite.lua',
   --   config= function()

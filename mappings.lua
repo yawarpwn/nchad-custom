@@ -2,6 +2,84 @@
 local M = {}
 local fn = vim.fn
 
+M.DAP = {
+  n = {
+    ["<leader>dc"] = { ":lua require'dap'.continue()<cr>", "Continue", opts = { silent = true } },
+    ["<leader>do"] = { ":lua require'dap'.step_over()<cr>", "Step Over", opts = { silent = true } },
+    ["<leader>di"] = { ":lua require'dap'.step_into()<cr>", "Step Into", opts = { silent = true } },
+    ["<leader>du"] = { ":lua require'dap'.step_out()<cr>", "Step Out", opts = { silent = true } },
+    ["<leader>db"] = { ":lua require'dap'.toggle_breakpoint()<cr>", "Breakpoint", opts = { silent = true } },
+    ["<leader>dB"] = {
+      ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>",
+      "Breakpoint Condition",
+      opts = { silent = true },
+    },
+    ["<leader>dd"] = { ":lua require'dapui'.toggle()<cr>", "Dap UI", opts = { silent = true } },
+    ["<leader>dl"] = { ":lua require'dap'.run_last()<cr>", "Run Last", opts = { silent = true } },
+  },
+}
+
+M.Neovim = {
+  n = {
+    ["<leader>nf"] = {
+      function()
+        require("telescope.builtin").find_files {
+          prompt_title = "Config Files",
+          search_dirs = config_dir,
+          cwd = cwd,
+        }
+      end,
+      "Find Config Files",
+      opts = { silent = true },
+    },
+    ["<leader>ng"] = {
+      function()
+        require("telescope.builtin").live_grep {
+          prompt_title = "Config Files",
+          search_dirs = config_dir,
+          cwd = cwd,
+        }
+      end,
+      "Grep Config Files",
+      opts = { silent = true },
+    },
+    ["<leader>nc"] = {
+      ":NvCheatsheet<cr>",
+      "Cheatsheet",
+      opts = { silent = true },
+    },
+    ["<leader>ni"] = {
+      function()
+        if vim.fn.has "nvim-0.9.0" == 1 then
+          vim.cmd "Inspect"
+        else
+          vim.notify("Inspect isn't available in this neovim version", vim.log.levels.WARN, { title = "Inspect" })
+        end
+      end,
+      "Inspect",
+      opts = { silent = true },
+    }, -- only available on neovim >= 0.9
+    ["<leader>nu"] = {
+      function()
+        local args = "git -C " .. vim.fn.stdpath "config" .. " pull --ff-only"
+        vim.fn.system(args)
+      end,
+      "Update",
+      opts = { silent = true },
+    },
+    ["<leader>nm"] = { ":messages<cr>", "Messages", opts = { silent = true } },
+    ["<leader>nh"] = { ":checkhealth<cr>", "Health", opts = { silent = true } },
+    ["<leader>nv"] = {
+      function()
+        local version = vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch
+        return vim.notify(version, vim.log.levels.INFO, { title = "Neovim Version" })
+      end,
+      "Version",
+      opts = { silent = true },
+    },
+  },
+}
+
 M.general = {
   i = {
 
@@ -189,6 +267,7 @@ M.general = {
     },
   },
 }
+
 M.nvterm = {
   plugin = true,
 
