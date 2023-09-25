@@ -73,15 +73,15 @@ autocmd("BufEnter", {
   desc = "Disable New Line Comment",
 })
 
-autocmd({ "FocusLost", "BufLeave", "BufWinLeave", "InsertLeave" }, {
-  callback = function()
-    if vim.bo.filetype ~= "" and vim.bo.buftype == "" then
-      vim.cmd "silent! w"
-    end
-  end,
-  group = general,
-  desc = "Auto Save",
-})
+-- autocmd({ "FocusLost", "BufLeave", "BufWinLeave", "InsertLeave" }, {
+--   callback = function()
+--     if vim.bo.filetype ~= "" and vim.bo.buftype == "" then
+--       vim.cmd "silent! w"
+--     end
+--   end,
+--   group = general,
+--   desc = "Auto Save",
+-- })
 
 autocmd("FocusGained", {
   callback = function()
