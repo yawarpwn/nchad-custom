@@ -77,6 +77,7 @@ M.Neovim = {
       "Version",
       opts = { silent = true },
     },
+    ["<leader>q"] = { ":%bd|e# <cr>", "Quit All", opts={silent =true}}
   },
 }
 
