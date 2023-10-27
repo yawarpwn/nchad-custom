@@ -1,8 +1,7 @@
-local overrides = require "custom.configs.overrides"
+-- local overrides = require "custom.configs.overrides"
 ---@type NvPluginSpec[]
 local plugins = {
 
-  -- Override plugin definition options
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
@@ -15,13 +14,21 @@ local plugins = {
           { name = "cmdline" },
         },
       })
-
-      require("luasnip.loaders.from_vscode").lazy_load()
     end,
     dependencies = {
       {
+        "saecki/crates.nvim",
+        tag = "v0.4.0",
+        opts = {},
+      },
+      {
         "hrsh7th/cmp-cmdline",
       },
+      -- AI Autocomplete
+      -- {
+      --   "Exafunction/codeium.nvim",
+      --   opts = {},
+      -- },
       {
         "L3MON4D3/LuaSnip",
         dependencies = "rafamadriz/friendly-snippets",
@@ -33,25 +40,26 @@ local plugins = {
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    opts = overrides.flash,
+    opts = require "custom.configs.flash",
   },
-
+    -- Fuzzy Finder
   -- {
-  --   "neovim/nvim-lspconfig",
+  --   "nvim-telescope/telescope.nvim",
+  --   init = function()
+  --     require("core.utils").load_mappings "telescope"
+  --   end,
+  --   opts = require "custom.configs.telescope",
   --   dependencies = {
-  --     -- format & linting
   --     {
-  --       "jose-elias-alvarez/null-ls.nvim",
-  --       config = function()
-  --         require "custom.configs.null-ls"
+  --       "nvim-telescope/telescope-fzf-native.nvim",
+  --       build = "make",
+  --       enabled = function()
+  --         return vim.fn.executable "make" == 1
   --       end,
   --     },
   --   },
-  --   config = function()
-  --     require "plugins.configs.lspconfig"
-  --     require "custom.configs.lspconfig"
-  --   end, -- Override to setup mason-lspconfig
   -- },
+
   -- Native LSP
   {
     "neovim/nvim-lspconfig",
@@ -66,6 +74,18 @@ local plugins = {
         end,
       },
       {
+        "pmizio/typescript-tools.nvim",
+        opts = {
+          settings = {
+            tsserver_file_preferences = {
+              includeInlayParameterNameHints = "all",
+              includeCompletionsForModuleExports = true,
+              quotePreference = "auto",
+            },
+          },
+        },
+      },
+      {
         "williamboman/mason.nvim",
         cmd = {
           "Mason",
@@ -75,18 +95,18 @@ local plugins = {
           "MasonUninstallAll",
           "MasonLog",
         },
-        opts = overrides.mason,
+        opts = require "custom.configs.mason",
       },
       {
         "williamboman/mason-lspconfig.nvim",
       },
       {
         "nvimdev/lspsaga.nvim",
-        opts = overrides.lspsaga,
+        opts = require "custom.configs.lspsaga",
       },
       {
         "folke/neodev.nvim",
-        opts = overrides.neodev,
+        opts = require "custom.configs.neodev",
       },
     },
     config = function()
@@ -129,11 +149,12 @@ local plugins = {
   {
     "stevearc/dressing.nvim",
     event = "VeryLazy",
-    opts = overrides.dressing,
+    opts = require "custom.configs.dressing",
   },
 
+  -- Icons
   {
-    "nvim-tree/nvim-web-devicons",
+    "nvim-ree/nvim-web-devicons",
     opts = {
       override_by_extension = {
         ["astro"] = {
@@ -144,18 +165,32 @@ local plugins = {
       },
     },
   },
-  {
-    "williamboman/mason.nvim",
-    opts = overrides.mason,
-  },
 
+  -- Syntax Highlighting
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = overrides.treesitter,
+    cmd = {
+      "TSInstall",
+      "TSUninstall",
+      "TSInstallInfo",
+      "TSUpdate",
+      "TSBufEnable",
+      "TSBufDisable",
+      "TSEnable",
+      "TSDisable",
+      "TSModuleInfo",
+      "TSToggle",
+      "TSBufToggle",
+    },
+    opts = require "custom.configs.treesitter",
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "syntax")
+      require("nvim-treesitter.install").prefer_git = false
+      require("nvim-treesitter.configs").setup(opts)
+    end,
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
       "JoosepAlviste/nvim-ts-context-commentstring",
-      "windwp/nvim-ts-autotag",
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
   },
   -- Commenter
@@ -173,11 +208,13 @@ local plugins = {
 
   {
     "nvim-tree/nvim-tree.lua",
-    opts = overrides.nvimtree,
+    opts = require("custom.configs.nvim-tree"),
   },
+
+  -- Preview Colors
   {
     "NvChad/nvim-colorizer.lua",
-    opts = overrides.colorizer,
+    opts = require("custom.configs.colorizer"),
   },
 
   -- Install a plugin
@@ -188,6 +225,7 @@ local plugins = {
       require("better_escape").setup()
     end,
   },
+
   -- Buffer Delete
   {
     "moll/vim-bbye",
@@ -201,14 +239,15 @@ local plugins = {
       require("nvim-surround").setup {}
     end,
   },
+
   -- Preview Markdown
-  {
-    "iamcco/markdown-preview.nvim",
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-    ft = "markdown",
-  },
+  -- {
+  --   "iamcco/markdown-preview.nvim",
+  --   build = function()
+  --     vim.fn["mkdp#util#install"]()
+  --   end,
+  --   ft = "markdown",
+  -- },
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
@@ -226,12 +265,46 @@ local plugins = {
       },
     },
   },
+  -- Improve Folds
+  {
+    "kevinhwang91/nvim-ufo",
+    event = "VeryLazy",
+    init = function()
+      vim.o.foldcolumn = "1"
+      vim.o.foldlevel = 99
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+      vim.o.foldmethod = "indent"
+    end,
+    opts = {
+      provider_selector = function(_, _, _)
+        return { "treesitter", "indent" }
+      end,
+    },
+    dependencies = {
+      "kevinhwang91/promise-async",
+      {
+        "luukvbaal/statuscol.nvim",
+        config = function()
+          local builtin = require "statuscol.builtin"
+          require("statuscol").setup {
+            relculright = true,
+            segments = {
+              { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa" },
+              { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
+              { text = { "%s" }, click = "v:lua.ScSa" },
+            },
+          }
+        end,
+      },
+    },
+  },
 
   -- Highlight, list and search todo comments in your projects
   {
     "folke/todo-comments.nvim",
     event = "VeryLazy",
-    opts = overrides.todo_comments,
+    opts = require("custom.configs.todo-comments"),
   },
 
   -- Show diffs
@@ -241,61 +314,61 @@ local plugins = {
   },
 
   -- Debugging
+  -- {
+  --   "rcarriga/nvim-dap-ui",
+  --   dependencies = {
+  --     {
+  --       "mfussenegger/nvim-dap",
+  --       config = function()
+  --         -- NOTE: Check out this for guide
+  --         -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
+  --         local dap = require "dap"
+  --         vim.fn.sign_define(
+  --           "DapBreakpoint",
+  --           { text = "🛑", texthl = "DiagnosticSignError", linehl = "", numhl = "" }
+  --         )
+
+  --         local dapui = require "dapui"
+  --         dap.listeners.after.event_initialized["dapui_config"] = function()
+  --           dapui.open()
+  --         end
+
+  --         -- dap.listeners.before.event_terminated["dapui_config"] = function()
+  --         --   dapui.close()
+  --         -- end
+
+  --         -- dap.listeners.before.event_exited["dapui_config"] = function()
+  --         --   dapui.close()
+  --         -- end
+
+  --         -- NOTE: Make sure to install the needed files/exectubles through mason
+
+  --         -- require "custom.configs.dap.cpptools"
+  --         -- require "custom.configs.dap.java-debug"
+  --         require "custom.configs.dap.node-debug2"
+  --         -- require "custom.configs.dap.debugpy"
+  --         -- require "custom.configs.dap.go-debug-adapter"
+  --         require "custom.configs.dap.js-debug"
+  --       end,
+  --     },
+  --   },
+  --   opts = overrides.dap_ui,
+  -- },
   {
-    "rcarriga/nvim-dap-ui",
-    dependencies = {
-      {
-        "mfussenegger/nvim-dap",
-        config = function()
-          -- NOTE: Check out this for guide
-          -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
-          local dap = require "dap"
-          vim.fn.sign_define(
-            "DapBreakpoint",
-            { text = "🛑", texthl = "DiagnosticSignError", linehl = "", numhl = "" }
-          )
-
-          local dapui = require "dapui"
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open()
-          end
-
-          -- dap.listeners.before.event_terminated["dapui_config"] = function()
-          --   dapui.close()
-          -- end
-
-          -- dap.listeners.before.event_exited["dapui_config"] = function()
-          --   dapui.close()
-          -- end
-
-          -- NOTE: Make sure to install the needed files/exectubles through mason
-
-          -- require "custom.configs.dap.cpptools"
-          -- require "custom.configs.dap.java-debug"
-          require "custom.configs.dap.node-debug2"
-          -- require "custom.configs.dap.debugpy"
-          -- require "custom.configs.dap.go-debug-adapter"
-          require "custom.configs.dap.js-debug"
-        end,
-      },
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add any options here
     },
-    opts = overrides.dap_ui,
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      -- "rcarriga/nvim-notify",
+    },
   },
-  {
-  "folke/noice.nvim",
-  event = "VeryLazy",
-  opts = {
-    -- add any options here
-  },
-  dependencies = {
-    -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-    "MunifTanjim/nui.nvim",
-    -- OPTIONAL:
-    --   `nvim-notify` is only needed, if you want to use the notification view.
-    --   If not available, we use `mini` as the fallback
-    -- "rcarriga/nvim-notify",
-    }
-}
 
   -- {
   --   'kkharji/sqlite.lua',
