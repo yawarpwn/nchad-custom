@@ -145,6 +145,31 @@ local plugins = {
   -- Schemas
   { "b0o/schemastore.nvim" },
 
+    -- Notification
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    config = function()
+      dofile(vim.g.base46_cache .. "notify")
+      require("notify").setup {
+        level = 2,
+        minimum_width = 50,
+        render = "default",
+        stages = "fade",
+        timeout = 3000,
+        top_down = true,
+      }
+
+      vim.notify = require "notify"
+      local messages = require "custom.core.messages"
+      math.randomseed(os.time())
+      local randomMessage = messages[math.random(#messages)]
+      if vim.g.startup_message then
+        vim.notify(randomMessage, vim.log.levels.INFO, { title = "Just For Fun:" })
+      end
+    end,
+  },
+
   -- Improve UI
   {
     "stevearc/dressing.nvim",
@@ -306,6 +331,26 @@ local plugins = {
     event = "VeryLazy",
     opts = require("custom.configs.todo-comments"),
   },
+    -- Git Signs
+  {
+    "lewis6991/gitsigns.nvim",
+    init = function()
+      require("core.utils").load_mappings "Git"
+      -- load gitsigns only when a git file is opened
+      vim.api.nvim_create_autocmd({ "BufRead" }, {
+        group = vim.api.nvim_create_augroup("GitSignsLazyLoad", { clear = true }),
+        callback = function()
+          vim.fn.system("git -C " .. '"' .. vim.fn.expand "%:p:h" .. '"' .. " rev-parse")
+          if vim.v.shell_error == 0 then
+            vim.api.nvim_del_augroup_by_name "GitSignsLazyLoad"
+            vim.schedule(function()
+              require("lazy").load { plugins = { "gitsigns.nvim" } }
+            end)
+          end
+        end,
+      })
+    end,
+  },
 
   -- Show diffs
   {
@@ -313,82 +358,17 @@ local plugins = {
     event = "VeryLazy",
   },
 
-  -- Debugging
-  -- {
-  --   "rcarriga/nvim-dap-ui",
-  --   dependencies = {
-  --     {
-  --       "mfussenegger/nvim-dap",
-  --       config = function()
-  --         -- NOTE: Check out this for guide
-  --         -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
-  --         local dap = require "dap"
-  --         vim.fn.sign_define(
-  --           "DapBreakpoint",
-  --           { text = "🛑", texthl = "DiagnosticSignError", linehl = "", numhl = "" }
-  --         )
-
-  --         local dapui = require "dapui"
-  --         dap.listeners.after.event_initialized["dapui_config"] = function()
-  --           dapui.open()
-  --         end
-
-  --         -- dap.listeners.before.event_terminated["dapui_config"] = function()
-  --         --   dapui.close()
-  --         -- end
-
-  --         -- dap.listeners.before.event_exited["dapui_config"] = function()
-  --         --   dapui.close()
-  --         -- end
-
-  --         -- NOTE: Make sure to install the needed files/exectubles through mason
-
-  --         -- require "custom.configs.dap.cpptools"
-  --         -- require "custom.configs.dap.java-debug"
-  --         require "custom.configs.dap.node-debug2"
-  --         -- require "custom.configs.dap.debugpy"
-  --         -- require "custom.configs.dap.go-debug-adapter"
-  --         require "custom.configs.dap.js-debug"
-  --       end,
-  --     },
-  --   },
-  --   opts = overrides.dap_ui,
-  -- },
+  -- UI for messages, cmdline, and popup
   {
     "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add any options here
-    },
+    lazy = false,
+    enabled = false,
+    opts = require "custom.configs.noice",
     dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      -- "rcarriga/nvim-notify",
+      { "MunifTanjim/nui.nvim" },
+      { "rcarriga/nvim-notify" },
     },
-  },
-
-  -- {
-  --   'kkharji/sqlite.lua',
-  --   config= function()
-  --     end
-  -- }
-
-  -- To make a plugin not be loaded
-  -- {
-  --   "NvChad/nvim-colorizer.lua",
-  --   enabled = false
-  -- },
-
-  -- All NvChad plugins are lazy-loade by default
-  -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
-  -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   lazy = false,
-  -- }
+  }
 }
 
 return plugins
