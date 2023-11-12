@@ -1,3 +1,7 @@
+-- ########################
+-- #   Neovim Options    #
+-- #######################
+
 local options = {
   backup = false, -- creates a backup file
   conceallevel = 0, -- so that `` is visible in markdown files
@@ -6,7 +10,7 @@ local options = {
   ignorecase = true, -- ignore case in search patterns
   mouse = "a", -- allow the mouse to be used in neovim
   pumheight = 8, -- pop up menu height
-  pumblend = 10, -- transparency of pop-up menu
+  pumblend = 0, -- transparency of pop-up menu
   showmode = false, -- we don't need to see things like -- INSERT -- anymore
   smartcase = true, -- smart case
   smartindent = true, -- make indenting smarter again
@@ -30,12 +34,7 @@ local options = {
   sidescrolloff = 8, -- minimal number of screen columns
   lazyredraw = false, -- Won't be redrawn while executing macros, register and other commands.
   termguicolors = true, -- Enables 24-bit RGB color in the TUI
-  -- foldenable = false,
-  -- foldlevel = 99,
-  -- foldlevelstart = 99,
-  -- foldmethod = "indent",
-  -- fillchars = { eob = " ", fold = " ", foldopen = "", foldsep = " ", foldclose = "", lastline = " " }, -- make EndOfBuffer invisible
-  -- foldcolumn = "1",
+  fillchars = { eob = " ", fold = " ", foldopen = "", foldsep = " ", foldclose = "", lastline = " " }, -- make EndOfBuffer invisible
   ruler = false,
   -- shell = vim.fn.executable "pwsh" and "pwsh" or "powershell",
   -- shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
@@ -49,7 +48,8 @@ local global = {
   mkdp_auto_close = false, -- Don't Exit Preview When Switching Buffers
   mapleader = " ", -- Set mapleader to space
   snipmate_snippets_path = vim.fn.stdpath "config" .. "/lua/custom/snippets/snipmate",
-  startup_message = true,
+  startup_message = false, -- Show startup message
+  random_header = true, -- Show random header
 }
 
 vim.opt.shortmess:append "Ac" -- Disable asking when editing file with swapfile.

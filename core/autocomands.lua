@@ -22,6 +22,16 @@ autocmd("VimEnter", {
   desc = "Open NvimTree when it's a Directory",
 })
 
+--Hide folds and Disable statuscolumn in these Filetypes
+autocmd("FileType", {
+  pattern = { "nvcheatsheet", "nvdash", "sagaoutline" },
+  callback = function()
+    vim.opt_local.foldcolumn = "0"
+    vim.opt_local.stc = ""
+  end,
+  group = general,
+})
+
 -- Remove this if there's an issue
 autocmd({ "BufReadPost", "BufNewFile" }, {
   once = true,
@@ -120,4 +130,3 @@ autocmd("FileType", {
   group = general,
   desc = "Enable Wrap in these filetypes",
 })
-
