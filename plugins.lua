@@ -1,6 +1,17 @@
 -- local overrides = require "custom.configs.overrides"
 ---@type NvPluginSpec[]
 local plugins = {
+  -- Show Indentlines
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    enabled = false,
+  },
+  -- Peek Lines
+  {
+    "nacro90/numb.nvim",
+    event = "CmdlineEnter",
+    config = true,
+  },
 
   -- Autocompletion
   {
@@ -24,11 +35,6 @@ local plugins = {
       {
         "hrsh7th/cmp-cmdline",
       },
-      -- AI Autocomplete
-      -- {
-      --   "Exafunction/codeium.nvim",
-      --   opts = {},
-      -- },
       {
         "L3MON4D3/LuaSnip",
         dependencies = "rafamadriz/friendly-snippets",
@@ -36,29 +42,16 @@ local plugins = {
     },
   },
 
-  -- Search motions
+  -- Preview Colors
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
-    opts = require "custom.configs.flash",
+    "NvChad/nvim-colorizer.lua",
+    opts = require "custom.configs.colorizer",
   },
-    -- Fuzzy Finder
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   init = function()
-  --     require("core.utils").load_mappings "telescope"
-  --   end,
-  --   opts = require "custom.configs.telescope",
-  --   dependencies = {
-  --     {
-  --       "nvim-telescope/telescope-fzf-native.nvim",
-  --       build = "make",
-  --       enabled = function()
-  --         return vim.fn.executable "make" == 1
-  --       end,
-  --     },
-  --   },
-  -- },
+
+  -- Utilities
+  {
+    "nvim-lua/plenary.nvim",
+  },
 
   -- Native LSP
   {
@@ -100,10 +93,12 @@ local plugins = {
       {
         "williamboman/mason-lspconfig.nvim",
       },
+      -- Improve Other LSP Functionalities
       {
         "nvimdev/lspsaga.nvim",
         opts = require "custom.configs.lspsaga",
       },
+      -- For Plugin Development
       {
         "folke/neodev.nvim",
         opts = require "custom.configs.neodev",
@@ -116,108 +111,6 @@ local plugins = {
     end,
   },
 
-  --Alternativeto Copilot
-  {
-    "Exafunction/codeium.vim",
-    enabled = true,
-    event = "VeryLazy",
-    config = function()
-      -- Change '<C-g>' here to any keycode you like.
-      vim.keymap.set("i", "<C-g>", function()
-        return vim.fn["codeium#Accept"]()
-      end, { expr = true })
-      vim.keymap.set("i", "<c-;>", function()
-        return vim.fn["codeium#CycleCompletions"](1)
-      end, { expr = true })
-      vim.keymap.set("i", "<c-,>", function()
-        return vim.fn["codeium#CycleCompletions"](-1)
-      end, { expr = true })
-      vim.keymap.set("i", "<c-x>", function()
-        return vim.fn["codeium#Clear"]()
-      end, { expr = true })
-
-      vim.g.codeium_filetypes = {
-        ["TelescopePrompt"] = false,
-      }
-    end,
-  },
-
-  -- Schemas
-  { "b0o/schemastore.nvim" },
-
-    -- Notification
-  {
-    "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    config = function()
-      dofile(vim.g.base46_cache .. "notify")
-      require("notify").setup {
-        level = 2,
-        minimum_width = 50,
-        render = "default",
-        stages = "fade",
-        timeout = 3000,
-        top_down = true,
-      }
-
-      vim.notify = require "notify"
-      local messages = require "custom.core.messages"
-      math.randomseed(os.time())
-      local randomMessage = messages[math.random(#messages)]
-      if vim.g.startup_message then
-        vim.notify(randomMessage, vim.log.levels.INFO, { title = "Just For Fun:" })
-      end
-    end,
-  },
-
-  -- Improve UI
-  {
-    "stevearc/dressing.nvim",
-    event = "VeryLazy",
-    opts = require "custom.configs.dressing",
-  },
-
-  -- Icons
-  {
-    "nvim-ree/nvim-web-devicons",
-    opts = {
-      override_by_extension = {
-        ["astro"] = {
-          icon = "󱓞",
-          color = "#FF7E33",
-          name = "astro",
-        },
-      },
-    },
-  },
-
-  -- Syntax Highlighting
-  {
-    "nvim-treesitter/nvim-treesitter",
-    cmd = {
-      "TSInstall",
-      "TSUninstall",
-      "TSInstallInfo",
-      "TSUpdate",
-      "TSBufEnable",
-      "TSBufDisable",
-      "TSEnable",
-      "TSDisable",
-      "TSModuleInfo",
-      "TSToggle",
-      "TSBufToggle",
-    },
-    opts = require "custom.configs.treesitter",
-    config = function(_, opts)
-      dofile(vim.g.base46_cache .. "syntax")
-      require("nvim-treesitter.install").prefer_git = false
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-    dependencies = {
-      "JoosepAlviste/nvim-ts-context-commentstring",
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-  },
   -- Commenter
   {
     "numToStr/Comment.nvim",
@@ -231,62 +124,22 @@ local plugins = {
     dependencies = "JoosepAlviste/nvim-ts-context-commentstring",
   },
 
+  -- File Explorer
   {
     "nvim-tree/nvim-tree.lua",
-    opts = require("custom.configs.nvim-tree"),
+    opts = require "custom.configs.nvim-tree",
   },
 
-  -- Preview Colors
+  -- Icons
   {
-    "NvChad/nvim-colorizer.lua",
-    opts = require("custom.configs.colorizer"),
-  },
-
-  -- Install a plugin
-  {
-    "max397574/better-escape.nvim",
-    event = "insertenter",
-    config = function()
-      require("better_escape").setup()
-    end,
-  },
-
-  -- Buffer Delete
-  {
-    "moll/vim-bbye",
-    cmd = { "Bdelete", "Bwipeout" },
-  },
-  {
-    "kylechui/nvim-surround",
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
-    event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup {}
-    end,
-  },
-
-  -- Preview Markdown
-  -- {
-  --   "iamcco/markdown-preview.nvim",
-  --   build = function()
-  --     vim.fn["mkdp#util#install"]()
-  --   end,
-  --   ft = "markdown",
-  -- },
-  {
-    "folke/trouble.nvim",
-    cmd = { "TroubleToggle", "Trouble" },
-    keys = {
-      { "<leader>x", desc = "Trouble" },
-      { "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<CR>", desc = "Workspace Diagnostics" },
-      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<CR>", desc = "Document Diagnostics" },
-      { "<leader>xq", "<cmd>TroubleToggle quickfix<CR>", desc = "Quickfix List Trouble" },
-    },
+    "nvim-ree/nvim-web-devicons",
     opts = {
-      use_diagnostic_signs = true,
-      action_keys = {
-        close = { "q", "<esc>" },
-        cancel = "<C-e>",
+      override_by_extension = {
+        ["astro"] = {
+          icon = "󱓞",
+          color = "#FF7E33",
+          name = "astro",
+        },
       },
     },
   },
@@ -325,13 +178,65 @@ local plugins = {
     },
   },
 
-  -- Highlight, list and search todo comments in your projects
+  -- Syntax Highlighting
+  {
+    "nvim-treesitter/nvim-treesitter",
+    cmd = {
+      "TSInstall",
+      "TSUninstall",
+      "TSInstallInfo",
+      "TSUpdate",
+      "TSBufEnable",
+      "TSBufDisable",
+      "TSEnable",
+      "TSDisable",
+      "TSModuleInfo",
+      "TSToggle",
+      "TSBufToggle",
+    },
+    opts = require "custom.configs.treesitter",
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "syntax")
+      require("nvim-treesitter.install").prefer_git = false
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+    dependencies = {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      "nvim-treesitter/nvim-treesitter-textobjects",
+    },
+  },
+
+  -- Schemas
+  { "b0o/schemastore.nvim" },
+
+  -- Buffer Delete
+  {
+    "moll/vim-bbye",
+    cmd = { "Bdelete", "Bwipeout" },
+  },
+
+  -- Highlight, List and Search Todo comments in your projects
   {
     "folke/todo-comments.nvim",
-    event = "VeryLazy",
-    opts = require("custom.configs.todo-comments"),
+    cmd = { "TodoLocList", "TodoQuickFix", "TodoTelescope" },
+    opts = require "custom.configs.todo-comments",
   },
-    -- Git Signs
+
+  -- Improve UI
+  {
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    opts = require "custom.configs.dressing",
+  },
+
+  -- Search motions
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = require "custom.configs.flash",
+  },
+
+  -- Git Signs
   {
     "lewis6991/gitsigns.nvim",
     init = function()
@@ -358,6 +263,109 @@ local plugins = {
     event = "VeryLazy",
   },
 
+  -- Fuzzy Finder
+  -- {
+  --   "nvim-telescope/telescope.nvim",
+  --   init = function()
+  --     require("core.utils").load_mappings "telescope"
+  --   end,
+  --   opts = require "custom.configs.telescope",
+  --   dependencies = {
+  --     {
+  --       "nvim-telescope/telescope-fzf-native.nvim",
+  --       build = "make",
+  --       enabled = function()
+  --         return vim.fn.executable "make" == 1
+  --       end,
+  --     },
+  --   },
+  -- },
+
+  --Alternativeto Copilot
+  {
+    "Exafunction/codeium.vim",
+    enabled = true,
+    event = "VeryLazy",
+    config = function()
+      -- Change '<C-g>' here to any keycode you like.
+      vim.keymap.set("i", "<C-g>", function()
+        return vim.fn["codeium#Accept"]()
+      end, { expr = true })
+      vim.keymap.set("i", "<c-;>", function()
+        return vim.fn["codeium#CycleCompletions"](1)
+      end, { expr = true })
+      vim.keymap.set("i", "<c-,>", function()
+        return vim.fn["codeium#CycleCompletions"](-1)
+      end, { expr = true })
+      vim.keymap.set("i", "<c-x>", function()
+        return vim.fn["codeium#Clear"]()
+      end, { expr = true })
+
+      vim.g.codeium_filetypes = {
+        ["TelescopePrompt"] = false,
+      }
+    end,
+  },
+
+  {
+    "max397574/better-escape.nvim",
+    event = "insertenter",
+    config = function()
+      require("better_escape").setup()
+    end,
+  },
+
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup {}
+    end,
+  },
+
+  {
+    "folke/trouble.nvim",
+    cmd = { "TroubleToggle", "Trouble" },
+    keys = {
+      { "<leader>x", desc = "Trouble" },
+      { "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<CR>", desc = "Workspace Diagnostics" },
+      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<CR>", desc = "Document Diagnostics" },
+      { "<leader>xq", "<cmd>TroubleToggle quickfix<CR>", desc = "Quickfix List Trouble" },
+    },
+    opts = {
+      use_diagnostic_signs = true,
+      action_keys = {
+        close = { "q", "<esc>" },
+        cancel = "<C-e>",
+      },
+    },
+  },
+   -- Notification
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    config = function()
+      dofile(vim.g.base46_cache .. "notify")
+      require("notify").setup {
+        level = 2,
+        minimum_width = 50,
+        render = "default",
+        stages = "fade",
+        timeout = 3000,
+        top_down = true,
+      }
+
+      vim.notify = require "notify"
+      local messages = require "custom.core.messages"
+      math.randomseed(os.time())
+      local randomMessage = messages[math.random(#messages)]
+      if vim.g.startup_message then
+        vim.notify(randomMessage, vim.log.levels.INFO, { title = "Just For Fun:" })
+      end
+    end,
+  },
+
   -- UI for messages, cmdline, and popup
   {
     "folke/noice.nvim",
@@ -368,7 +376,7 @@ local plugins = {
       { "MunifTanjim/nui.nvim" },
       { "rcarriga/nvim-notify" },
     },
-  }
+  },
 }
 
 return plugins
